@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+   
+<script language="javascript" type="text/javascript">
+var re = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+var array = new Array();
+var t_arr = new Array();
+var checkDiv = document.getElementById("checkDiv");
+
+array.push("BMW");
+array.push("Toyota");
+array.push("Honda");
+
+
+function convert_code(){
+  var counter=1;
+  var pos = 0;
+  var inputtext = document.getElementById('converter').inputtext.value;
+  var textcount = (inputtext.match(/input type=\"text\"/g) || []).length;
+  
+  //("<input type=\"text\" name=\"(.*)>");
+  var tmpStr  = inputtext.match("<input type=\"text\" name=\"(.*)\"");
+  var newStr = tmpStr[1];
+  t_arr.push(newStr);
+  
+  
+  
+  if(inputtext.search("form") > 0){
+  
+  /*This section is for textbox and button */
+     var textDiv = document.getElementById("textDiv");
+     
+     var label = document.createElement("LABEL");
+     var textboxmessage = document.createElement("LABEL");
+     var radiomessage = document.createElement("LABEL");
+     var textbox = document.createElement('INPUT');
+     
+     var btn = document.createElement("INPUT");
+     btn.setAttribute('type', 'button');
+     btn.setAttribute('name', 'submit');
+     btn.setAttribute('value', 'SUBMIT');
+     
+     label.appendChild(document.createTextNode(t_arr[pos]));
+     textbox.type = 'text';     
+     
+     label.appendChild(textbox);
+     textDiv.appendChild(label);
+     
+     
+     //Email Section
+         
+     var label2 = document.createElement("LABEL");
+     var textbox2 = document.createElement('INPUT');
+       
+     label2.appendChild(document.createTextNode("Email:"));
+     textbox2.type = 'text'; 
+        
+     label2.appendChild(textbox2);
+     emailDiv.appendChild(label2);
+       
+        
+     
+     /*This section is for the Radio Button */
+        
+    	var objDiv = document.getElementById("radioDiv");
+        
+        var radioItem1 = document.createElement("input");
+        radioItem1.type = "radio";
+        radioItem1.name = "radioGrp";
+        radioItem1.id = "rad1";
+        radioItem1.value = "myradio1";
+ 
+        radioItem1.defaultChecked = false; 
+        radioItem1.checked = false;
+ 
+        var radioItem2 = document.createElement("input");
+        radioItem2.type = "radio";
+        radioItem2.name = "radioGrp";
+        radioItem2.id = "rad2";
+        radioItem2.value = "myradio2";
+        
+               
+        var checktype = inputtext.match("radio");
+          
+     	if(checktype=="radio"){
+         var radio1 = inputtext.match("male");
+         var radio2  = inputtext.match("female");
+      	}
+ 
+        var objTextNode1 = document.createTextNode(radio1);
+        var objTextNode2 = document.createTextNode(radio2);
+ 
+        var objLabel = document.createElement("label");
+        objLabel.htmlFor = radioItem1.id;
+        objLabel.appendChild(radioItem1);
+        objLabel.appendChild(objTextNode1);
+ 
+        var objLabel2 = document.createElement("label");
+        objLabel2.htmlFor = radioItem2.id;
+        objLabel2.appendChild(radioItem2);
+        objLabel2.appendChild(objTextNode2);
+         
+ 
+        objDiv.appendChild(objLabel);
+        objDiv.appendChild(objLabel2);
+    
+        //This section is for the Checkboxes
+        var count = (inputtext.match(/checkbox/g) || []).length;      
+       for(var i=0; i<array.length; i++) {
+          var divTag = document.createElement("div");
+          cb = document.createElement( "input" );
+          cb.type = "checkbox";
+          cb.id = "checkBox"+i;
+          cb.name = "checkBox";
+          cb.checked = false;
+          cb.value = array[i];
+
+          
+          divTag.appendChild(cb);
+          divTag.appendChild(document.createTextNode(array[i]));
+          document.getElementById("append").appendChild(divTag);
+         
+      }
+       //This Section validates the Link
+        var gethref = inputtext.match("<a href=\"(.*)\">");
+        var getdata = gethref[1];
+        
+         
+		var a = document.createElement('a');
+        var linkText = document.createTextNode("Test My Link");
+        a.appendChild(linkText);
+        a.title = "Test My Link";
+        a.href = getdata;
+        hyperDiv.appendChild(a);  
+        
+        var request = new XMLHttpRequest();        
+        request.open('GET', 'www.yahoo.com', true);
+        request.send(); 
+        
+        
+       
+     	//This Section is For the New line to submit button
+     	var buttonDiv = document.getElementById("buttonDiv");
+      	buttonDiv.appendChild(btn);
+     
+            
+    	 btn.onclick = function()
+     	 {
+                  
+         	if(textbox.value =="")
+             document.getElementById("error1").innerHTML = "* Name: Missing      				Name"; 
+          	else
+           	document.getElementById("error1").innerHTML = " ";
+             
+         	if(radioItem1.checked == false && radioItem2.checked == false) 
+             document.getElementById("error2").innerHTML = "* Name: Missing      				Option";  
+          	else
+             document.getElementById("error2").innerHTML = " ";
+             
+             if(counter <2)
+             document.getElementById("error3").innerHTML = "* Check: Choose 2 or more options in the CheckBox"; 
+          	else
+           	document.getElementById("error3").innerHTML = " ";
+            
+           
+            if (!re.test(textbox2.value))
+    			document.getElementById("error4").innerHTML = "* Check: Your Email Address"; 
+			else 
+    			document.getElementById("error4").innerHTML = " "; 
+            
+     		if (request.status === 404) 
+    			document.getElementById("error5").innerHTML = "HTML does not Exist"; 
+			else 
+    			document.getElementById("error5").innerHTML = " "; 
+          
+     };  
+  }   
+}
+
+
+function Createcheckbox(chkboxid) {
+  var checkbox = document.createElement('input');
+  checkbox.type = "checkbox";
+  checkbox.id = chkboxid;
+  checkbox.value = chkboxid;
+  return checkbox;
+}
+</script>
+
+<form id="converter">
+Enter Your WebPage Code:<br />
+<textarea name="inputtext" cols=80 rows=20></textarea><br />
+<input onclick="javascript:convert_code();" style="margin-top: 5px;" type="button" value="Test" /><br />
+Output:<br />
+<div id="error1"></div>
+<div id="error2"></div> <br/>
+<div id="error3"></div> <br/>
+<div id="error4"></div> <br/>
+<div id="error5"></div> <br/>
+<div id="textDiv"></div> <br/>
+<div id="radioDiv"></div> <br/>
+<div id="append" name="append"></div> </br>
+<div id="emailDiv"></div> </br>
+<div id="hyperDiv"></div> 
+<div id="buttonDiv"></div> 
+</form>
+      
+   </body>
+</html>
